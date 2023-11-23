@@ -15,7 +15,7 @@ app.use("/user", userRoutes);
 import postRoutes from "./routes/post.routes.js"
 app.use("/post", postRoutes);
 
-const router = require("./routes/swagger.routes.js");
+import router from "./routes/swagger.routes.cjs";
 app.use("/doc", router);
 
 export default app;
