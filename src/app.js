@@ -15,8 +15,8 @@ app.use("/user", userRoutes);
 import postRoutes from "./routes/post.routes.js"
 app.use("/post", postRoutes);
 
-import swaggerRoutes from "./routes/swagger.routes.js"
-app.use("/doc", swaggerRoutes);
+import router from "./routes/swagger.routes.js"
+app.use("/doc", router);
 
 
 
