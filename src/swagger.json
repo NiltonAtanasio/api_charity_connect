@@ -1,0 +1,702 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Charity Connect API Documentation",
+    "description": "In this documentation you will be able to consult the API end-points and also test all available routes. Do not forget to register and carry out the authorization.",
+    "contact": {
+      "email": "atanazzio.contato@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local"
+    }
+  ],
+  "paths": {
+    "/user": {
+      "get": {
+        "summary": "Search all users",
+        "description": "routes to get all users",
+        "tags": ["User"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "summary": "Create a new user",
+        "description": "Route to create a new user",
+        "tags": ["User"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "Users": {
+                  "value": {
+                    "name": "João Carlos",
+                    "userName": "@jão",
+                    "email": "jãocarlos@gmail.com",
+                    "password": "senha",
+                    "confirmPassword": "senha",
+                    "avatar": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fdepositphotos.com%2Fvectors%2Fplaceholder.html&psig=AOvVaw1WGYzytW2hfivejCAXWzWy&ust=1700765037237000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLj79tGh2IIDFQAAAAAdAAAAABAE"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad requested"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schemma": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "summary": "Login to Charity Connect",
+        "description": "Route to login",
+        "tags": ["User"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "User": {
+                  "value": {
+                    "email": "jãocarlos@gmail.com",
+                    "password": "senha"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/{id}/": {
+      "patch": {
+        "summary": "Update user by id",
+        "description": "Route to editing the user by id",
+        "tags": ["User"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "User ID",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "Users": {
+                  "value": {
+                    "name": "Carlinhos"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "delete": {
+        "summary": "Delete a user",
+        "description": "Route to delete a User",
+        "tags": ["User"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "User ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/search/{id}": {
+      "get": {
+        "summary": "Search user by id",
+        "description": "Route to search user by id",
+        "tags": ["User"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "User ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/post": {
+      "get": {
+        "summary": "Search all posts",
+        "description": "Route to get all posts",
+        "tags": ["Post"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Post"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/post/create": {
+      "post": {
+        "summary": "Create a new post",
+        "description": "Route to create a new Post",
+        "tags": ["Post"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Post"
+              },
+              "examples": {
+                "Post": {
+                  "value": {
+                    "user": "",
+                    "image": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpt.wikipedia.org%2Fwiki%2FFicheiro%3APlaceholder_view_vector.svg&psig=AOvVaw3hSAs0v1lfvUkUU7MpN4Ih&ust=1700767268338000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCNDbu_mp2IIDFQAAAAAdAAAAABAJ",
+
+                    "text": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schemma": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/post/search": {
+      "get": {
+        "summary": "Search posts by title",
+        "description": "Route to search for post that matches submitted title via query parameters",
+        "tags": ["Post"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "text",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Post"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/post/byuser": {
+      "get": {
+        "summary": "Search posts by user id",
+        "description": "Route to search posts by user id",
+        "tags": ["Post"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "400": {
+            "description": "Not Found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Post"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/post/{id}/": {
+      "get": {
+        "summary": "Search post by id",
+        "description": "Route to get post by id",
+        "tags": ["Post"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "Post ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schemma": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/post/update/{id}": {
+      "patch": {
+        "summary": "Update a post",
+        "description": "Route to update a Post",
+        "tags": ["Post"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "Post ID",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Post"
+              },
+              "examples": {
+                "Post": {
+                  "value": {
+                    "text": "",
+                    "image": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schemma": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/post/{id}": {
+      "delete": {
+        "summary": "Delete a post",
+        "description": "Route to delete a Post",
+        "tags": ["Post"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "Post ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/post/like/{id}": {
+      "patch": {
+        "summary": "Like a post",
+        "description": "Route to like a post",
+        "tags": ["Post"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "Post ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/post/comment/{id}": {
+      "patch": {
+        "summary": "Comment on a post",
+        "description": "Route responsible for commenting on a post",
+        "tags": ["Post"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "Post Id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              },
+              "examples": {
+                "Comment": {
+                  "value": {
+                    "comment": "Nice comment"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/post/comment/{idPost}/{idComment}": {
+      "patch": {
+        "summary": "Remove comment",
+        "description": "Route to remove a comment on a post",
+        "tags": ["Post"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idPost",
+            "type": "string",
+            "description": "Post Id",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "idComment",
+            "type": "string",
+            "description": "Comment Id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Not Found"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "Post": {
+            "type": "array"
+          },
+          "createdAt": {
+            "type": "date"
+          },
+          "updatedAt": {
+            "type": "date"
+          }
+        }
+      },
+      "Post": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "likes": {
+            "type": "array"
+          },
+          "comments": {
+            "type": "array"
+          },
+          "createdAt": {
+            "type": "date"
+          },
+          "updatedAt": {
+            "type": "date"
+          }
+        }
+      },
+      "Comment": {
+        "type": "object",
+        "properties": {
+          "comment": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "date"
+          }
+        }
+      },
+      "Like": {
+        "type": "array",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "date"
+          }
+        }
+      }
+    }
+  }
+}

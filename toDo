@@ -1,0 +1,123 @@
+1. Por onde começar?
+   Ao iniciar um projeto, já compreendendo qual modelo de arquitetura queremos usar, é importante que sigamos a melhor maneira de organização.
+
+Na pasta raiz, ficam os arquivos/pastas de configuração.
+
+[] server.js
+[] package.json
+[] package-lock.json
+[] node-modules/
+[] .gitignore
+
+Sim, o server.js é o arquivo que usamos para ~ configurar ~ o nosso servidor. Logo, ele fica na pasta raiz do projeto!
+
+2. Instalando as dependências necessárias
+   Como já sei exatamente o que vou precisar pra esse projeto, já faço a instalação das dependências que preciso. E atualizo os scripts quando necessário
+
+[] express
+$ npm i express
+
+[] cors
+$ npm i cors
+
+[] dotenv-safe
+$ npm i dotenv-safe
+
+[] nodemon
+$ npm i --save-dev nodemon
+
+[] mongoose
+$ npm i -mongoose
+
+! Quando utilizar um projeto já inicializado, que já possui um package.json, posso verificar as dependências já adicionadas e apenas rodar o comando
+$ npm install
+
+3. Criando as pastas
+   Para criar cada arquivo em seu lugar, bora organizar as pastas do projeto.
+
+[] src
+[] config
+[] controllers
+[] models
+[] routes
+
+[] Em package.json abaixo da linha ["main": "server.js"] colocar ["type": "module"].
+
+4. Iniciando o servidor \o/
+   Após criar as pastas para o projeto, podemos inicializar o nosso servidor.
+   ! No app.js:
+
+[] importar o express
+[] instanciar o express: const app = express();
+[] imporar o cors
+[] app.use(cors())
+
+! No server.js:
+
+[] importar app
+[] const PORT = process.env.PORT;
+[] app.listen();
+
+! No package.json
+
+[] em "scripts" adicionar a linha: "dev": "nodemon -r dotenv-safe/config server.js"
+
+Conectar banco de dados
+
+[] criar arquivo "database.js" dentro da pasta config
+[] utilizar a documentação do banco escolhido
+[] configurar a variavel de ambiente no .env
+[] importar database no app.js
+[] conectar database db.connect()
+
+6. Autentificação
+
+[] criar um arquivo de routes na pasta routes
+[] importar o express
+[] const router = express.Router();
+[] router.get("/");
+[] exportar router
+[] importar routes no app.js
+[] app.use("/nomeDaRota", routes)
+
+---
+
+[] Escrevendo a primeira lógica
+[] moviesController.js
+[] importando arquivo .json
+[] enviando arquivo .json
+[] app.get()
+
+[] Definindo a primeira rota
+[] moviesRoutes.js
+[] importando nosso controller
+[] usando express.Router()
+[] router.get()
+[] definindo a primeira rota
+[] exportando o router
+
+O app.js também é o responsável por definir nossa rota padrão!
+
+        [] importando arquivo de rotas moviesRoutes.js
+        [] definindo a rota padrão com app.use()
+
+7. Mais lógica \O/
+   Vamos agora amadurecer as lógicas que estamos construíndo para filtar nossos dados. Ao criar uma nova lógica, também configuro uma nova rota ;)
+
+EXEMPLO EXERCÍCIO
+
+- Usar um arquivo json
+- Configurar uma API na arquitetura MVC do zero
+  - Pasta raiz com arquivos de configuração
+  - Instalar as dependências que preciso (express e nodemon)
+  - Criar pasta src
+    - Criar pastas (controllers, routes e models)
+    - Criar arquivos dentro de cada pasta
+  - Iniciar o servidor
+  - Configurar o app.js
+  - Configuro rotas
+  - Configura as lógias (controllers)
+    - Trazer tudo do json
+    - Trazer filtrado titulo
+    - Trazer filtrado por id
+  - Ir rodando e testando no postman (:
