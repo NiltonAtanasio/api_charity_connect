@@ -1,16 +1,50 @@
 import UserSchema from "../models/userSchema.js";
+import { countUser, findAllService } from "../services/userService.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
 const SECRET = process.env.SECRET;
 
 
-const getAll = async (req, res) => {
+const getAllUsers = async (req, res) => {
   try {
-    const users = await UserSchema.find();
-    res.status(200).json(users);
+    let { limit, offset } = req.query;
+
+    limit = Number(limit);
+    offset = Number(offset);
+
+    if (!limit) {
+      limit = 15;
+    }
+    if (!offset) {
+      offset = 0;
+    }
+
+    const users = await findAllService(offset, limit);
+    const total = await countUser();
+    const currentUrl = req.baseUrl;
+
+    const next = offset + limit;
+    const nextUrl = next < total ? `${currentUrl}?limit=${limit}offset=${next}` : null;
+
+    const previous = offset - limit < 0 ? null : offset - limit;
+    const previousUrl = previous != null ? `${currentUrl}?limit=${limit}offset=${previous}` : null;
+
+    if (users.length === 0) {
+      return res.status(400).json({ msg: "There is no registered user" });
+    }
+
+    res.status(200).json({
+      results: users,
+      nextUrl,
+      previousUrl,
+      limit,
+      offset,
+      total
+    });
   } catch (error) {
-    res.json({
-      message: error.message,
+    console.error(error);
+    res.status(500).json({
+      msg: "server error, please try again later"
     });
   }
 }
@@ -151,7 +185,7 @@ const searchUser = async (req, res) => {
 }
 
 export default {
-  getAll,
+  getAllUsers,
   createUser,
   updateUserById,
   deleteUserById,
