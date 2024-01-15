@@ -7,6 +7,10 @@ function generateHashedPassword(password) {
   return bcrypt.hashSync(password, salt);
 }
 
+function comparePassword(password, passwordTwo) {
+  return bcrypt.compareSync(password, passwordTwo);
+}
+
 function generateToken(id) {
   return jwt.sign({ id: id }, SECRET);
 }
@@ -14,5 +18,6 @@ function generateToken(id) {
 export default {
   generateToken,
   generateHashedPassword,
+  comparePassword,
 }
 

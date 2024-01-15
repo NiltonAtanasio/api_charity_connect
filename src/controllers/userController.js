@@ -107,6 +107,45 @@ const createUser = async (req, res) => {
   }
 };
 
+const login = async (req, res) => {
+  try {
+    const user = req.body;
+
+    // validations
+    if (!user.email) {
+      return res.status(422).json({ msg: "the email is required" })
+    }
+
+    if (!user.password) {
+      return res.status(422).json({ msg: "the password is required" })
+    }
+
+    // check if user exists
+    const checkedUser = await findUserByEmailService(user.email).select('+password');
+
+    if (!checkedUser) {
+      return res.status(404).json({ msg: "User not found" })
+    }
+
+    // check if password match
+    const checkedPassword = authServices.comparePassword(user.password, checkedUser.password);
+
+    if (!checkedPassword) {
+      return res.status(422).json({ msg: "invalid password" })
+    }
+
+    const token = authServices.generateToken(checkedUser._id)
+
+    res.status(200).json({ msg: "authentication completed successfully", token });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      msg: "server error, please try again later"
+    });
+  }
+}
+
 const updateUserById = async (req, res) => {
   try {
     const updatedUser = await UserSchema.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -133,47 +172,6 @@ const deleteUserById = async (req, res) => {
     });
   }
 };
-
-const login = async (req, res) => {
-  const user = req.body;
-
-  // validations
-  if (!user.email) {
-    return res.status(422).json({ msg: "the email is required" })
-  }
-
-  if (!user.password) {
-    return res.status(422).json({ msg: "the password is required" })
-  }
-
-  // check if user exists
-  const checkUser = await UserSchema.findOne({ email: user.email }).select('+password')
-
-  if (!checkUser) {
-    return res.status(404).json({ msg: "User not found" })
-  }
-
-  // check if password match
-  const checkPassword = await bcrypt.compareSync(user.password, checkUser.password);
-
-  if (!checkPassword) {
-    return res.status(422).json({ msg: "invalid password" })
-  }
-
-  try {
-    const token = jwt.sign({
-      id: checkUser._id
-    }, SECRET)
-
-    res.status(200).json({ msg: "authentication completed successfully", token });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      msg: "server error, please try again later"
-    });
-  }
-}
 
 const searchUser = async (req, res) => {
   const id = req.params.id
