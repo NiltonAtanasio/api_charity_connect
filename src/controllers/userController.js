@@ -1,8 +1,6 @@
 import UserSchema from "../models/userSchema.js";
-import { countUser, findAllService } from "../services/userService.js"
-import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken";
-const SECRET = process.env.SECRET;
+import { countUserService, createUserService, findAllService, findUserByEmailService } from "../services/userService.js"
+import authServices from "../services/authServices.js";
 
 
 const getAllUsers = async (req, res) => {
@@ -20,7 +18,7 @@ const getAllUsers = async (req, res) => {
     }
 
     const users = await findAllService(offset, limit);
-    const total = await countUser();
+    const total = await countUserService();
     const currentUrl = req.baseUrl;
 
     const next = offset + limit;
@@ -50,39 +48,45 @@ const getAllUsers = async (req, res) => {
 }
 
 const createUser = async (req, res) => {
-
-  const user = req.body
-
-  //validations 
-  if (!user.name) {
-    return res.status(422).json({ msg: "the name is required" })
-  }
-
-  if (!user.email) {
-    return res.status(422).json({ msg: "the email is required" })
-  }
-
-  if (!user.password) {
-    return res.status(422).json({ msg: "the password is required" })
-  }
-
-  if (user.password !== user.confirmPassword) {
-    return res.status(422).json({ msg: "put the same password" })
-  }
-
-  const checkEmail = await UserSchema.findOne({ email: user.email })
-
-  if (checkEmail) {
-    return res.status(422).json({ msg: "email already exists" })
-  }
-
   try {
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(user.password, salt);
-    user.password = hashedPassword;
+    const user = req.body
 
-    const newUser = new UserSchema(user);
-    const savedUser = await newUser.save();
+    //validations 
+    if (!user.name) {
+      return res.status(422).json({ msg: "the name is required" })
+    }
+
+    if (!user.email) {
+      return res.status(422).json({ msg: "the email is required" })
+    }
+
+    if (!user.userName) {
+      return res.status(422).json({ msg: "the user name is required" })
+    }
+
+    if (!user.password) {
+      return res.status(422).json({ msg: "the password is required" })
+    }
+
+    if (user.password !== user.confirmPassword) {
+      return res.status(422).json({ msg: "put the same password" })
+    }
+
+    if (!user.avatar) {
+      return res.status(422).json({ msg: "the avatar is required" })
+    }
+
+    const checkEmail = await findUserByEmailService(user.email);
+
+    if (checkEmail) {
+      return res.status(422).json({ msg: "email already exists" })
+    }
+
+    user.password = authServices.generateHashedPassword(user.password)
+
+    const savedUser = await createUserService(user);
+
+    const token = authServices.generateToken(savedUser._id)
 
     res.status(201).json({
       message: "User added successfully!",
@@ -92,7 +96,8 @@ const createUser = async (req, res) => {
         email: savedUser.email,
         id: savedUser._id,
         createdAt: savedUser.createdAt
-      }
+      },
+      token: token
     });
   } catch (error) {
     console.error(error);
