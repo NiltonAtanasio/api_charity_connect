@@ -1,5 +1,5 @@
 import UserSchema from "../models/userSchema.js";
-import { countUserService, createUserService, findAllService, findUserByEmailService } from "../services/userService.js"
+import { countUserService, createUserService, findAllService, findUserByEmailService, updateUserService } from "../services/userService.js"
 import authServices from "../services/authServices.js";
 
 
@@ -148,10 +148,10 @@ const login = async (req, res) => {
 
 const updateUserById = async (req, res) => {
   try {
-    const updatedUser = await UserSchema.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedUser = await updateUserService(req.params.id, req.body);
 
     res.status(200).json({
-      message: "Usuário atualizada com sucesso!",
+      message: "User updated successfully",
       updatedUser,
     });
   } catch (error) {

@@ -4,10 +4,11 @@ export const findAllService = (offset, limit) => userSchema.find().sort({ _id: -
 
 export const countUserService = () => userSchema.countDocuments();
 
-export const findUserByEmailService = (email) => userSchema.findOne({ email: email });
+export const findUserByEmailService = (email) => userSchema.findOne({ email });
 
 export const createUserService = (user) => new userSchema(user).save();
 
+export const updateUserService = (id, body) => userSchema.findOneAndUpdate({ _id: id }, body, { rawResult: true, new: true });
 
-export const findUserById = (id) => userSchema.findById(id);
+export const findUserByIdService = (id) => userSchema.findById(id);
 
