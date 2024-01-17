@@ -1,4 +1,3 @@
-import UserSchema from "../models/userSchema.js";
 import { countUserService, createUserService, deleteUserByIdService, findAllService, findUserByEmailService, searchUserByNameService, updateUserService } from "../services/userService.js"
 import authServices from "../services/authServices.js";
 
@@ -28,7 +27,7 @@ const getAllUsers = async (req, res) => {
     const previousUrl = previous != null ? `${currentUrl}?limit=${limit}offset=${previous}` : null;
 
     if (users.length === 0) {
-      return res.status(400).json({ msg: "There is no registered user" });
+      return res.status(400).json({ message: "There is no registered user" });
     }
 
     res.status(200).json({
@@ -42,7 +41,7 @@ const getAllUsers = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      msg: "server error, please try again later"
+      message: "server error, please try again later"
     });
   }
 }
@@ -53,33 +52,33 @@ const createUser = async (req, res) => {
 
     //validations 
     if (!user.name) {
-      return res.status(422).json({ msg: "the name is required" })
+      return res.status(422).json({ message: "the name is required" })
     }
 
     if (!user.email) {
-      return res.status(422).json({ msg: "the email is required" })
+      return res.status(422).json({ message: "the email is required" })
     }
 
     if (!user.userName) {
-      return res.status(422).json({ msg: "the user name is required" })
+      return res.status(422).json({ message: "the user name is required" })
     }
 
     if (!user.password) {
-      return res.status(422).json({ msg: "the password is required" })
+      return res.status(422).json({ message: "the password is required" })
     }
 
     if (user.password !== user.confirmPassword) {
-      return res.status(422).json({ msg: "put the same password" })
+      return res.status(422).json({ message: "put the same password" })
     }
 
     if (!user.avatar) {
-      return res.status(422).json({ msg: "the avatar is required" })
+      return res.status(422).json({ message: "the avatar is required" })
     }
 
     const checkEmail = await findUserByEmailService(user.email);
 
     if (checkEmail) {
-      return res.status(422).json({ msg: "email already exists" })
+      return res.status(422).json({ message: "email already exists" })
     }
 
     user.password = authServices.generateHashedPassword(user.password)
@@ -102,7 +101,7 @@ const createUser = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      msg: "server error, please try again later"
+      message: "server error, please try again later"
     });
   }
 };
@@ -113,35 +112,35 @@ const login = async (req, res) => {
 
     // validations
     if (!user.email) {
-      return res.status(422).json({ msg: "the email is required" })
+      return res.status(422).json({ message: "the email is required" })
     }
 
     if (!user.password) {
-      return res.status(422).json({ msg: "the password is required" })
+      return res.status(422).json({ message: "the password is required" })
     }
 
     // check if user exists
     const checkedUser = await findUserByEmailService(user.email).select('+password');
 
     if (!checkedUser) {
-      return res.status(404).json({ msg: "User not found" })
+      return res.status(404).json({ message: "User not found" })
     }
 
     // check if password match
     const checkedPassword = authServices.comparePassword(user.password, checkedUser.password);
 
     if (!checkedPassword) {
-      return res.status(422).json({ msg: "invalid password" })
+      return res.status(422).json({ message: "invalid password" })
     }
 
     const token = authServices.generateToken(checkedUser._id)
 
-    res.status(200).json({ msg: "authentication completed successfully", token });
+    res.status(200).json({ message: "authentication completed successfully", token });
 
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      msg: "server error, please try again later"
+      message: "server error, please try again later"
     });
   }
 }
@@ -156,6 +155,9 @@ const updateUserById = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+    res.status(500).json({
+      message: "server error, please try again later"
+    });
   }
 };
 
@@ -167,9 +169,10 @@ const deleteUserById = async (req, res) => {
     res.status(200).json({
       mensage: `User '${userFound.email}' successfully deleted`,
     });
-  } catch (err) {
-    res.status(400).json({
-      mensagem: err.message,
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "server error, please try again later"
     });
   }
 };
@@ -194,7 +197,7 @@ const searchUser = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      msg: "server error, please try again later"
+      message: "server error, please try again later"
     });
   }
 }
