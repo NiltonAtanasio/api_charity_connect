@@ -10,5 +10,7 @@ export const createUserService = (user) => new userSchema(user).save();
 
 export const updateUserService = (id, body) => userSchema.findOneAndUpdate({ _id: id }, body, { rawResult: true, new: true });
 
+export const deleteUserByIdService = (id) => userSchema.findByIdAndDelete(id);
+
 export const findUserByIdService = (id) => userSchema.findById(id);
 

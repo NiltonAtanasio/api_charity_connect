@@ -1,5 +1,5 @@
 import UserSchema from "../models/userSchema.js";
-import { countUserService, createUserService, findAllService, findUserByEmailService, updateUserService } from "../services/userService.js"
+import { countUserService, createUserService, deleteUserByIdService, findAllService, findUserByEmailService, updateUserService } from "../services/userService.js"
 import authServices from "../services/authServices.js";
 
 
@@ -161,10 +161,11 @@ const updateUserById = async (req, res) => {
 
 const deleteUserById = async (req, res) => {
   try {
-    const userFound = await UserSchema.findByIdAndDelete(req.params.id);
+
+    const userFound = await deleteUserByIdService(req.params.id)
 
     res.status(200).json({
-      mensagem: `Usuário '${userFound.email}' deletada com sucesso!`,
+      mensage: `User '${userFound.email}' successfully deleted`,
     });
   } catch (err) {
     res.status(400).json({
