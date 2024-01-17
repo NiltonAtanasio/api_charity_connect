@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "https://api-charity-connect.onrender.com/doc/",
+      "url": "https://api-charity-connect.onrender.com/",
       "description": "Render"
     },
     {
@@ -204,18 +204,17 @@
         }
       }
     },
-    "/user/search/{id}": {
+    "/user/search": {
       "get": {
-        "summary": "Search user by id",
+        "summary": "Search user by name",
         "description": "Route to search user by id",
         "tags": ["User"],
         "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
-            "in": "path",
-            "name": "id",
+            "in": "query",
+            "name": "name",
             "type": "string",
-            "description": "User ID",
             "required": true
           }
         ],
