@@ -14,3 +14,5 @@ export const deleteUserByIdService = (id) => userSchema.findByIdAndDelete(id);
 
 export const findUserByIdService = (id) => userSchema.findById(id);
 
+export const searchUserByNameService = (name) => userSchema.find({ userName: { $regex: `${name || ""}`, $options: "i" } }).sort({ _id: -1 });
+

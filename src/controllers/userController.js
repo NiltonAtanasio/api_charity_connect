@@ -1,5 +1,5 @@
 import UserSchema from "../models/userSchema.js";
-import { countUserService, createUserService, deleteUserByIdService, findAllService, findUserByEmailService, updateUserService } from "../services/userService.js"
+import { countUserService, createUserService, deleteUserByIdService, findAllService, findUserByEmailService, searchUserByNameService, updateUserService } from "../services/userService.js"
 import authServices from "../services/authServices.js";
 
 
@@ -175,17 +175,28 @@ const deleteUserById = async (req, res) => {
 };
 
 const searchUser = async (req, res) => {
-  const id = req.params.id
+  try {
+    const { name } = req.query;
 
-  // check if user exists
-  const user = await UserSchema.findById(id, "-password");
+    const usersFound = await searchUserByNameService(name);
 
-  if (!user) {
-    return res.status(404).json({ msg: "User not found" });
+    if (usersFound.length === 0) {
+      return res.status(400).json({ message: "There is no user with this user name" })
+    };
+
+    return res.status(200).json({
+      results: usersFound.map((item) => ({
+        name: item.name,
+        userName: item.userName,
+        avatar: item.avatar
+      }))
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      msg: "server error, please try again later"
+    });
   }
-
-  res.status(200).json({ user });
-
 }
 
 export default {

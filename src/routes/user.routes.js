@@ -9,6 +9,6 @@ router.post("/register", controllers.createUser);
 router.post("/login", controllers.login);
 router.patch("/:id", authMiddleware, controllers.updateUserById);
 router.delete("/:id", authMiddleware, controllers.deleteUserById);
-router.post("/search/:id", authMiddleware, controllers.searchUser);
+router.get("/search", authMiddleware, controllers.searchUser);
 
 export default router;
