@@ -1,4 +1,4 @@
-import { countUserService, createUserService, deleteUserByIdService, findAllService, findUserByEmailService, searchUserByNameService, updateUserService } from "../services/userService.js"
+import { countUserService, createUserService, deleteUserByIdService, findAllService, findUserByEmailService, findUserByIdService, searchUserByNameService, updateUserService } from "../services/userService.js"
 import authServices from "../services/authServices.js";
 
 
@@ -44,6 +44,32 @@ const getAllUsers = async (req, res) => {
       message: "server error, please try again later"
     });
   }
+}
+
+const getUserById = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(404).json({ msg: "Id is required" });
+    }
+
+    const userFound = await findUserByIdService(userId);
+
+    if (userFound.length === 0) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ userFound });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "server error, please try again later"
+    });
+  }
+
+
 }
 
 const createUser = async (req, res) => {
@@ -204,6 +230,7 @@ const searchUser = async (req, res) => {
 
 export default {
   getAllUsers,
+  getUserById,
   createUser,
   updateUserById,
   deleteUserById,
