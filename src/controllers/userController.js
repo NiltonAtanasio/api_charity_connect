@@ -48,7 +48,7 @@ const getAllUsers = async (req, res) => {
 
 const getUserById = async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.params.id;
 
     if (!userId) {
       return res.status(404).json({ msg: "Id is required" });
