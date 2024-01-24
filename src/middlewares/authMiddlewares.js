@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 const SECRET = process.env.SECRET;
 
-import { findUserByIdService } from "../services/userService.js";
+import { findUserByIdRepository } from "../repositories/userRepositories.js";
 
 function authMiddleware(req, res, next) {
   const authHeader = req.headers["authorization"]
@@ -15,7 +15,7 @@ function authMiddleware(req, res, next) {
     jwt.verify(token, SECRET, async (err, decoded) => {
       if (err) return res.status(401).send({ message: "Invalid token!" });
 
-      const user = await findUserByIdService(decoded.id);
+      const user = await findUserByIdRepository(decoded.id);
 
       if (!user || !user._id)
         return res.status(401).send({ message: "Invalid token!" });
