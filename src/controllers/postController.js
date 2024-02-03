@@ -1,28 +1,20 @@
-import { findAll, createService, countPost, findByPostId, searchPostByTitle, byUserService, postUpdateservice, postDeleteService, postLikeService, deleteLikePost, postCommentService, deleteCommentService } from "../services/postServices.js"
+// import { findAll, createService, countPost, findByPostId, searchPostByTitle, byUserService, postUpdateservice, postDeleteService, postLikeService, deleteLikePost, postCommentService, deleteCommentService, createPostService } from "../services/postServices.js"
+
+import { createPostService } from "../services/postServices.js";
 
 const createPost = async (req, res) => {
-
   const { image, text } = req.body;
-
-  if (!image || !text) {
-    return res.status(422).json({ msg: "Send all fields for posting" })
-  }
+  const user = req.userId;
 
   try {
 
-    const post = await createService({ image, text, user: req.userId });
+    const post = await createPostService(image, text, user);
 
-    res.status(201).json({
-      message: "post made successfully!",
-      post,
-    });
+    return res.status(201).send(post);
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      msg: "server error, please try again later"
-    });
-  }
+    res.status(500).send(error.message);
+  };
 };
 
 const getAll = async (req, res) => {
